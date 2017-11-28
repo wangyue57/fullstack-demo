@@ -49,12 +49,12 @@
                 this.$router.push('./todolist')
               } else {
                 this.$message.error(res.data.info)
-                sessionStorage.setItem('demo-token', null)
+                sessionStorage.removeItem('demo-token')
               }
             },
             err => {
               this.$message.error('请求错误！')
-              sessionStorage.setItem('demo-token', null)
+              sessionStorage.removeItem('demo-token')
             })
       }
     }
