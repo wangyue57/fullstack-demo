@@ -1,7 +1,7 @@
 <template>
   <el-row class="content">
     <el-col :xs="{span:20,offset:2}" :sm="{span:8,offset:8}">
-      <span>欢迎：{{name}}！你的待办事项是：</span>
+      <span>欢迎：{{user.name}}！你的待办事项是：</span>
       <el-input placeholder="what needs to be done" v-model="todoText" @keyup.enter.native="_addTodo"></el-input>
       <div :class="{'todo-list': true, completed: todo.completed}" v-for="todo in showTodos">
         <input type="checkbox" v-model="todo.completed">
@@ -32,27 +32,39 @@
         todoText: ''
       }
     },
+
+    mounted() {
+      this.getData()
+    },
+
     computed: {
-      ...mapState(['todos']),
+      ...mapState(['todos', 'user']),
       ...mapGetters(['allCompleted']),
       showTodos() {
         return this.todos
       }
     },
+
     methods: {
       ...mapActions(['addTodo', 'removeTodo']),
 
       _addTodo() {
         if (this.todoText === '') return
 
-        this.addTodo(this.todoText).then(() => {
-          this.todoText = ''
-        })
+        this.addTodo(this.todoText).then(() => this.todoText = '')
       },
 
-      save() {},
+      getData() {
+
+      },
+
+      save() {
+
+      },
 
       logout() {
+        this.axios.defaults.headers.common['Authorization'] = null
+        sessionStorage.removeItem('demo-token')
         this.$router.push('/')
       }
     }

@@ -41,7 +41,8 @@
           .then(
             res => {
               if (res.data.success) {
-                this.$message.success('注册成功！')
+                this.$message.success('注册成功，自动登录！')
+                this.$store.state.user = {name: this.name, password: this.password}
                 this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
                 sessionStorage.setItem('demo-token', res.data.token)
 

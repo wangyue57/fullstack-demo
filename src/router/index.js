@@ -15,16 +15,15 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/todolist',
-      name: 'todolist',
-      component: TodoList
-    },
-    {
       path: '/signup',
       name: 'signup',
       component: Signup
     },
-
+    {
+      path: '/todolist',
+      name: 'todolist',
+      component: TodoList
+    },
   ]
 })
 
@@ -35,10 +34,10 @@ router.beforeEach((to, from, next) => {
     return next('/todolist')
   }
 
-  if (to.path !== '/' && !token) {
+  if (to.path !== '/' && to.path !== '/signup' && !token) {
     return next('/')
   }
-  
+
   next()
 })
 

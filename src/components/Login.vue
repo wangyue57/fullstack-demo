@@ -25,28 +25,32 @@
     },
     methods: {
       login() {
-        this.axios
-          .post('/api/login', {name: this.name, password: this.password})
-          .then(
-            res => {
-              if (res.data.success) {
-                this.$message.success('登录成功！')
-                this.axios.defaults.headers.common['Authorization'] ='Bearer ' + res.data.token
-                sessionStorage.setItem('demo-token', res.data.token)
+        if (!this.name || !this.password) {
+          return this.$message.error('请输入账号及密码！')
+        }
 
-                this.$router.push('./todolist')
-              } else {
-                this.$message.error(res.data.info)
-                sessionStorage.setItem('demo-token', null)
-              }
-            },
-            err => {
-              this.$message.error('请求错误！')
-              sessionStorage.setItem('demo-token', null)
-            })
+        this.axios
+          .post('/api/login', {name: this.name, password: this.password}).then(
+          res => {
+            if (res.data.success) {
+              this.$message.success('登录成功！')
+              this.$store.state.user = {name: this.name, password: this.password}
+              this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
+              sessionStorage.setItem('demo-token', res.data.token)
+
+              this.$router.push('./todolist')
+            } else {
+              this.$message.error(res.data.info)
+              sessionStorage.removeItem('demo-token')
+            }
+          },
+          err => {
+            this.$message.error('请求错误！')
+            sessionStorage.removeItem('demo-token')
+          })
       },
 
-      signup(){
+      signup() {
 
       }
     }
