@@ -34,7 +34,7 @@
           res => {
             if (res.data.success) {
               this.$message.success('登录成功！')
-              this.$store.state.user = {name: this.name, password: this.password}
+              this.$store.state.user = {name: this.name}
               this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
               sessionStorage.setItem('demo-token', res.data.token)
 
@@ -49,10 +49,6 @@
             sessionStorage.removeItem('demo-token')
           })
       },
-
-      signup() {
-
-      }
     }
   }
 </script>

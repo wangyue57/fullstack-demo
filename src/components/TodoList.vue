@@ -39,14 +39,14 @@
 
     computed: {
       ...mapState(['todos', 'user']),
-      ...mapGetters(['allCompleted']),
+      ...mapGetters(['allCompleted', 'activeNum', 'completedNum']),
       showTodos() {
         return this.todos
       }
     },
 
     methods: {
-      ...mapActions(['addTodo', 'removeTodo']),
+      ...mapActions(['addTodo', 'removeTodo', 'activeAll', 'completeAll']),
 
       _addTodo() {
         if (this.todoText === '') return
