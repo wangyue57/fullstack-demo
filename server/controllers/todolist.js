@@ -1,7 +1,7 @@
 const todolist = require('../models/todolist')
 
 const getTodolist = async (ctx, next) => {
-  ctx.body = await  todolist.getTodolistById(ctx.params.id)
+  ctx.body = await todolist.getTodolistById(ctx.params.id)
   await next()
 }
 

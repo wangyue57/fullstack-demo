@@ -1,5 +1,6 @@
 const user = require('../models/user')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const getUserInfo = async (ctx, next) => {
   ctx.body = await user.getUserById(ctx.params.id)
@@ -8,14 +9,14 @@ const getUserInfo = async (ctx, next) => {
 
 const postUserAuth = async (ctx, next) => {
   const data = ctx.request.body
-  const userInfo = await  user.getUserByName(data.name)
+  const userInfo = await user.getUserByName(data.name)
   let body
 
   if (!userInfo) {
     body = {success: false, info: '用户不存在！'}
   }
 
-  if (userInfo && userInfo.password === data.password) {
+  if (userInfo && await bcrypt.compare(data.password, userInfo.password)) {
     const userToken = {name: userInfo.name, id: userInfo.id}
     const secret = 'vue-koa-demo'
     const token = jwt.sign(userToken, secret)
@@ -28,8 +29,26 @@ const postUserAuth = async (ctx, next) => {
   }
 
   ctx.body = body
-  await  next()
+  await next()
 }
 
-module.exports = {getUserInfo, postUserAuth}
+const signup = async (ctx, next) => {
+  const data = ctx.request.body
+  const userInfo = await user.getUserByName(data.name)
+  let body
+
+  if (userInfo) {
+    body = {success: false, info: '用户已存在！'}
+  } else {
+    data.password = await bcrypt.hash(data.password, 5)
+    const newUser = await user.addUser(data)
+
+    body = {success: true, newUser}
+  }
+
+  ctx.body = body
+  await next()
+}
+
+module.exports = {getUserInfo, postUserAuth, signup}
 

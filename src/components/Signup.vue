@@ -3,12 +3,13 @@
     <img src="../assets/logo.png">
     <el-row class="content">
       <el-col :xs="24" :sm="{span: 6,offset: 9}">
-        <span class="title">欢迎登录</span>
+        <span class="title">欢迎注册</span>
         <el-row>
           <el-input v-model="name" placeholder="账号"></el-input>
           <el-input v-model="password" placeholder="密码" type="password"></el-input>
-          <el-button type="primary" @click="login">登录</el-button>
-          <router-link to="/signup">注册</router-link>
+          <el-input v-model="confirmPassword" placeholder="确认密码" type="password"></el-input>
+          <el-button type="primary" @click="signup">注册</el-button>
+          <router-link to="/">返回</router-link>
         </el-row>
       </el-col>
     </el-row>
@@ -20,18 +21,28 @@
     data() {
       return {
         name: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       }
     },
     methods: {
-      login() {
+      signup() {
+        if (!this.name || !this.password) {
+          return this.$message.error('请输入账号及密码！')
+        }
+
+        if (this.password !== this.confirmPassword) {
+          this.confirmPassword = ''
+          return this.$message.error('两次输入密码不一致！')
+        }
+
         this.axios
-          .post('/api/login', {name: this.name, password: this.password})
+          .post('/api/signup', {name: this.name, password: this.password})
           .then(
             res => {
               if (res.data.success) {
-                this.$message.success('登录成功！')
-                this.axios.defaults.headers.common['Authorization'] ='Bearer ' + res.data.token
+                this.$message.success('注册成功！')
+                this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token
                 sessionStorage.setItem('demo-token', res.data.token)
 
                 this.$router.push('./todolist')
@@ -44,13 +55,10 @@
               this.$message.error('请求错误！')
               sessionStorage.setItem('demo-token', null)
             })
-      },
-
-      signup(){
-
       }
     }
   }
+
 </script>
 
 <style scoped>

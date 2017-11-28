@@ -14,7 +14,7 @@ app
   .use(Json())
   .use(Logger())
   .use(Bodyparser())
-  .use(koaJwt({secret: 'vue-koa-demo'}).unless({path: [/^\/api\/login/]}))
+  .use(koaJwt({secret: 'vue-koa-demo'}).unless({path: [/^\/api\/login/, /^\/api\/signup/]}))
   .use(router.routes())
   .use(historyApiFallback())
   .use(serve(path.resolve('dist')))
