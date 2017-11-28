@@ -6,7 +6,7 @@ import Signup from '@/components/Signup'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -27,3 +27,19 @@ export default new Router({
 
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const token = sessionStorage.getItem('demo-token')
+
+  if (to.path === '/' && token) {
+    return next('/todolist')
+  }
+
+  if (to.path !== '/' && !token) {
+    return next('/')
+  }
+  
+  next()
+})
+
+export default router
